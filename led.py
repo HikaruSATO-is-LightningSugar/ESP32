@@ -4,10 +4,12 @@ import machine
 import utime
 import random
 
-red    = machine.Pin(13, machine.Pin.OUT)
+ #red    = machine.Pin(13, machine.Pin.OUT)
+red    = machine.Pin(21, machine.Pin.OUT)
 green  = machine.Pin(12, machine.Pin.OUT)
 yellow = machine.Pin(14, machine.Pin.OUT)
-colors = [red, green, yellow]
+ #colors = [red, green, yellow]
+colors = [red, red, red]
 
 
 for i in range(1000):

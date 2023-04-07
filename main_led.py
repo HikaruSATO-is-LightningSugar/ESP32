@@ -6,7 +6,7 @@ import random
 # LEDの初期設定
 red    = machine.Pin(13, machine.Pin.OUT)
 green  = machine.Pin(12, machine.Pin.OUT)
-yellow = machine.Pin(27, machine.Pin.IN)
+yellow = machine.Pin(14, machine.Pin.IN)
 colors = [red, green, yellow]
 color_order = 0
 LED_io = True

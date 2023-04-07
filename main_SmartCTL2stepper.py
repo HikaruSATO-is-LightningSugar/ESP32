@@ -12,9 +12,9 @@ import machine
 # 360°＝2048とする
 number_of_steps = 2048
 # ULN2003 Motor Driver Pins
-motor_pin_1 = 25
-motor_pin_2 = 26
-motor_pin_3 = 27
+motor_pin_1 = 27
+motor_pin_2 = 14
+motor_pin_3 = 12
 motor_pin_4 = 13
 my_motor =  Stepper(number_of_steps, motor_pin_1, motor_pin_2, motor_pin_3, motor_pin_4)
 # モーターの回転速度と、トルクは反比例になってる？？

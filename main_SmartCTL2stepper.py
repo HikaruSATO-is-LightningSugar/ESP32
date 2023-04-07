@@ -1,3 +1,17 @@
+# Stepper Motor setting
+stepper_rpm = 7
+motor_pin_1 = 27
+motor_pin_2 = 14
+motor_pin_3 = 12
+motor_pin_4 = 13
+# LED setting
+moter_io_led = 2
+# Handling setting
+SmartCTL_pin = 35
+tactswitch_pin = 34
+STOPswitch_pin = 32
+
+
 #from stepper_arduino import Stepper
 from stepper_qiita import Stepper
 import time
@@ -11,11 +25,6 @@ import machine
 # https://qiita.com/kotaproj/items/cd37c971f03fb02c97ce
 # 360°＝2048とする
 number_of_steps = 2048
-# ULN2003 Motor Driver Pins
-motor_pin_1 = 27
-motor_pin_2 = 14
-motor_pin_3 = 12
-motor_pin_4 = 13
 my_motor =  Stepper(number_of_steps, motor_pin_1, motor_pin_2, motor_pin_3, motor_pin_4)
 # モーターの回転速度と、トルクは反比例になってる？？
 # set_speed(14) では、LEGOのギアが回らなかった
@@ -26,7 +35,7 @@ my_motor =  Stepper(number_of_steps, motor_pin_1, motor_pin_2, motor_pin_3, moto
 # テンションがかかりはじめる時とで、
 # 逆回転してしまう、、、、なんでだろう
 # setSpeed() を10→6に変更して、トルクをあげてみる
-my_motor.setSpeed(7)
+my_motor.setSpeed(stepper_rpm)
 # 回転数の指定
 # 実験1（絹糸、6rpm）：10500μL/510s/60回転　=　80μL/4s/0.5回転
 # 実験2（テグス、7rpm）：
@@ -43,12 +52,11 @@ angle = rotation * number_of_steps
 # http://tech-and-investment.com/raspberrypi-pico-14-gpio-interrupt/
 # https://micropython-docs-ja.readthedocs.io/ja/latest/esp32/quickref.html
 # https://goma483549.hatenablog.com/entry/2021/09/18/104726
-SmartCTL_pin = machine.Pin(35, machine.Pin.IN, machine.Pin.PULL_DOWN)
-tactswitch_pin = machine.Pin(34, machine.Pin.IN, machine.Pin.PULL_DOWN)
-STOPswitch_pin = machine.Pin(32, machine.Pin.IN, machine.Pin.PULL_DOWN)
+SmartCTL_input = machine.Pin(SmartCTL_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
+tactswitch_input = machine.Pin(tactswitch_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
+STOPswitch_input = machine.Pin(STOPswitch_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
 pre_time = utime.ticks_ms()
 the_number_of_requests = 0
-
 # 割り込み処理の関数定義
 def one_more_syrup(SmartCTL_or_tactswitch):
     global pre_time
@@ -66,8 +74,7 @@ def one_more_syrup(SmartCTL_or_tactswitch):
         the_number_of_requests += 1
         #print('callback function is called!')
     pre_time = cur_time
-    
-def STOP_motor():
+def STOP_motor(p):
     global pre_time
     cur_time = utime.ticks_ms()
     # スイッチからの入力を受けたら、チャタリング防止のため0.２秒割り込み拒否
@@ -77,11 +84,9 @@ def STOP_motor():
         global the_number_of_requests
         the_number_of_requests = 0
     pre_time = cur_time
-    
-SmartCTL_pin.irq(trigger=machine.Pin.IRQ_RISING, handler=one_more_syrup('SmartCTL'))
-tactswitch_pin.irq(trigger=machine.Pin.IRQ_RISING, handler=one_more_syrup('tactswitch'))
-STOPswitch_pin.irq(trigger=machine.Pin.IRQ_RISING, handler=STOP_motor)
-
+SmartCTL_input.irq(trigger=machine.Pin.IRQ_RISING, handler=one_more_syrup('SmartCTL'))
+tactswitch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=one_more_syrup('tactswitch'))
+STOPswitch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=STOP_motor)
 
 
 #  メインループでステップモーターを回転させる
@@ -89,11 +94,10 @@ while True:
     if the_number_of_requests > 0:
         try:
             # モーターが回っていることを示すLED点灯
-            led=15
-            machine.Pin(led, machine.Pin.OUT).value(1)
+            machine.Pin(moter_io_led, machine.Pin.OUT).value(1)
             my_motor.step(angle)
             the_number_of_requests -= 1
-            machine.Pin(led, machine.Pin.OUT).value(0)
+            machine.Pin(moter_io_led, machine.Pin.OUT).value(0)
         except Exception:
             pass
     elif the_number_of_requests == 0:

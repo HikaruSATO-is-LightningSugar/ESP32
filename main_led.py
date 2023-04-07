@@ -16,29 +16,34 @@ LED_io = True
 color_switch_pin = machine.Pin(25, machine.Pin.IN, machine.Pin.PULL_DOWN)
 io_switch_pin = machine.Pin(26, machine.Pin.IN, machine.Pin.PULL_DOWN)
 # 割り込み処理の関数定義
-prev_time = 0
+pre_time = 0
+
 def change_color(p):
-    global prev_time
+    global pre_time
     cur_time = utime.ticks_ms()
-    if cur_time < prev_time + 150 :
+    if cur_time < pre_time + 150 :
         # 割り込みの感覚が150msec未満だったら
         # チャタリングと判断してスキップ
         return
-    print("blue button")
-    global color_order
-    color_order += 1
+    else:
+        print("blue button")
+        global color_order
+        color_order += 1
+    
 def change_LED_io(p):
-    global prev_time
+    global pre_time
     cur_time = utime.ticks_ms()
-    if cur_time < prev_time + 150 :
+    if cur_time < pre_time + 150 :
         # 割り込みの感覚が150msec未満だったら
         # チャタリングと判断してスキップ
         return
-    print("red button")
-    global LED_io
-    irq_io = bool(abs(LED_io - 1))
-    print(irq_io)
-    LED_io = irq_io
+     else:
+         print("red button")
+        global LED_io
+        irq_io = bool(abs(LED_io - 1))
+        print(irq_io)
+        LED_io = irq_io
+        
 color_switch_pin.irq(trigger=machine.Pin.IRQ_RISING, handler=change_color)
 io_switch_pin.irq(trigger=machine.Pin.IRQ_RISING, handler=change_LED_io)
 

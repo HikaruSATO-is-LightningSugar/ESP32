@@ -1,15 +1,15 @@
 # Stepper Motor setting
 stepper_rpm = 7
-motor_pin_1 = 27
-motor_pin_2 = 14
-motor_pin_3 = 12
-motor_pin_4 = 13
+motor_pin_1 = 32
+motor_pin_2 = 33
+motor_pin_3 = 25
+motor_pin_4 = 26
 # LED setting
-moter_io_led = 2
+moter_io_led_pin = 15
 # Handling setting
-SmartCTL_pin = 35
-tactswitch_pin = 34
-STOPswitch_pin = 32
+SmartCTL_pin = 18
+tactswitch_pin = 21
+STOPswitch_pin = 19
 
 
 #from stepper_arduino import Stepper
@@ -42,6 +42,7 @@ my_motor.setSpeed(stepper_rpm)
 rotation = 0.5
 # 回転数×360°
 angle = rotation * number_of_steps
+moter_io_led = machine.Pin(moter_io_led_pin, machine.Pin.OUT)
 
 
 #  割り込み処理
@@ -56,7 +57,7 @@ SmartCTL_input = machine.Pin(SmartCTL_pin, machine.Pin.IN, machine.Pin.PULL_DOWN
 tactswitch_input = machine.Pin(tactswitch_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
 STOPswitch_input = machine.Pin(STOPswitch_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
 pre_time = utime.ticks_ms()
-the_number_of_requests = 0
+the_number_of_requests = 2
 # 割り込み処理の関数定義
 def one_more_syrup(SmartCTL_or_tactswitch):
     global pre_time
@@ -70,6 +71,7 @@ def one_more_syrup(SmartCTL_or_tactswitch):
         if cur_time < pre_time + 200:
             return
     else:
+        print(SmartCTL_or_tactswitch)
         global the_number_of_requests
         the_number_of_requests += 1
         #print('callback function is called!')
@@ -81,6 +83,7 @@ def STOP_motor(p):
     if cur_time < pre_time + 200:
         return
     else:
+        print('STOP is plessed')
         global the_number_of_requests
         the_number_of_requests = 0
     pre_time = cur_time
@@ -91,16 +94,19 @@ STOPswitch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=STOP_motor)
 
 #  メインループでステップモーターを回転させる
 while True:
+     #global the_number_of_requests
     if the_number_of_requests > 0:
         try:
             # モーターが回っていることを示すLED点灯
-            machine.Pin(moter_io_led, machine.Pin.OUT).value(1)
+            moter_io_led.value(1)
             my_motor.step(angle)
             the_number_of_requests -= 1
-            machine.Pin(moter_io_led, machine.Pin.OUT).value(0)
+            moter_io_led.value(0)
         except Exception:
             pass
     elif the_number_of_requests == 0:
-        pass
+        moter_io_led.value(0)
+    elif the_number_of_requests < 0:
+        the_number_of_requests = 0
         
     

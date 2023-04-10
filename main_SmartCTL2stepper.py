@@ -59,27 +59,37 @@ STOPswitch_input = machine.Pin(STOPswitch_pin, machine.Pin.IN, machine.Pin.PULL_
 pre_time = utime.ticks_ms()
 the_number_of_requests = 2
 # 割り込み処理の関数定義
-def one_more_syrup(SmartCTL_or_tactswitch):
+
+# MED-PCからの入力を受けたら、3秒割り込み拒否
+def MEDPC_callback(p):
     global pre_time
     cur_time = utime.ticks_ms()
-    # MED-PCからの入力を受けたら、3秒割り込み拒否
-    if SmartCTL_or_tactswitch == 'SmartCTL':
-        if cur_time < pre_time + 3000:
-            return
-    # スイッチからの入力を受けたら、チャタリング防止のため0.２秒割り込み拒否
-    elif SmartCTL_or_tactswitch == 'tactswitch':
-        if cur_time < pre_time + 200:
+    if cur_time < pre_time + 3000:
             return
     else:
-        print(SmartCTL_or_tactswitch)
+        print("SmartCTL input")
         global the_number_of_requests
         the_number_of_requests += 1
         #print('callback function is called!')
     pre_time = cur_time
+
+# スイッチからの入力を受けたら、チャタリング防止のため0.２秒割り込み拒否
+def SWITCH_callback(p):
+    global pre_time
+    cur_time = utime.ticks_ms()
+    if cur_time < pre_time + 200:
+            return
+    else:
+        print("tactswitch input")
+        global the_number_of_requests
+        the_number_of_requests += 1
+        #print('callback function is called!')
+    pre_time = cur_time
+
+# スイッチからの入力を受けたら、チャタリング防止のため0.２秒割り込み拒否
 def STOP_motor(p):
     global pre_time
     cur_time = utime.ticks_ms()
-    # スイッチからの入力を受けたら、チャタリング防止のため0.２秒割り込み拒否
     if cur_time < pre_time + 200:
         return
     else:
@@ -87,8 +97,9 @@ def STOP_motor(p):
         global the_number_of_requests
         the_number_of_requests = 0
     pre_time = cur_time
-SmartCTL_input.irq(trigger=machine.Pin.IRQ_RISING, handler=one_more_syrup('SmartCTL'))
-tactswitch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=one_more_syrup('tactswitch'))
+    
+SmartCTL_input.irq(trigger=machine.Pin.IRQ_RISING, handler=MEDPC_callback)
+tactswitch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=SWITCH_callback)
 STOPswitch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=STOP_motor)
 
 
@@ -110,3 +121,4 @@ while True:
         the_number_of_requests = 0
         
     
+

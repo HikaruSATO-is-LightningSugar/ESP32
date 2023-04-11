@@ -37,6 +37,8 @@ def MEDPC_callback(p):
 # これで、条件処理をして、
 # 割り込みハンドラ呼び出しの代わりとする
 # 他にもっといい方法があれば、そっちを使うと思う
+TTL_pin = 12
+async_cycle_ms = 200 
 async def check_dc_nv(dc, period_ms):
     global dc
     while True:
@@ -44,12 +46,12 @@ async def check_dc_nv(dc, period_ms):
         if val < 190000:
             MEDPC_callback()
         elif val > 240000:
-        await uasyncio.sleep_ms(200)
+        await uasyncio.sleep_ms(period_ms)
             
 async def main(pin, period_ms):
     dc_pin = machine.Pin(pin, machine.Pin.IN)
     dc = machine.ADC(dc_pin)
     uasyncio.create_task(check_dc_nv(dc, period_ms))
-    await uasyncio.sleep_ms(100)
+    await uasyncio.sleep_ms(period_ms)
     
-
+uasyncio.run(main(12, async_cycle_ms)

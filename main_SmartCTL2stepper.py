@@ -105,25 +105,6 @@ tactswitch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=SWITCH_callback)
 STOPswitch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=STOP_motor)
 
 
-#  メインループでステップモーターを回転させる
-while True:
-     #global the_number_of_requests
-    if the_number_of_requests > 0:
-        try:
-            # モーターが回っていることを示すLED点灯
-            moter_io_led.value(1)
-            my_motor.step(angle)
-            the_number_of_requests -= 1
-            moter_io_led.value(0)
-        except Exception:
-            pass
-    elif the_number_of_requests == 0:
-        moter_io_led.value(0)
-    elif the_number_of_requests < 0:
-        the_number_of_requests = 0
-        
-        
-        
 # MED-PCのSmartCTLを
 # SG-231の「28V VDC to TTL ADAPTOR」につないだら、
 # なぜか交流電流が流れており、
@@ -158,4 +139,27 @@ async def main(pin, period_ms):
     uasyncio.create_task(check_dc_nv(dc, period_ms))
     await uasyncio.sleep_ms(period_ms)
     
-uasyncio.run(main(12, async_cycle_ms)
+uasyncio.run(main(TTL_pin, async_cycle_ms)
+
+
+#  メインループでステップモーターを回転させる
+while True:
+     #global the_number_of_requests
+    if the_number_of_requests > 0:
+        try:
+            # モーターが回っていることを示すLED点灯
+            moter_io_led.value(1)
+            my_motor.step(angle)
+            the_number_of_requests -= 1
+            moter_io_led.value(0)
+        except Exception:
+            pass
+    elif the_number_of_requests == 0:
+        moter_io_led.value(0)
+    elif the_number_of_requests < 0:
+        the_number_of_requests = 0
+        
+        
+        
+
+

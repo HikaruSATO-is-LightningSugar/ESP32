@@ -1,8 +1,12 @@
 # https://micropython-docs-ja.readthedocs.io/ja/latest/library/uasyncio.html
+# https://micropython-docs-ja.readthedocs.io/ja/latest/library/machine.ADC.html#machine-adc
 
 import uasyncio
 import machine
 import utime
+
+adc_pin = machine.Pin(12, machine.Pin.IN)
+adc = machine.ADC(adc_pin)
 
 pre_time = utime.ticks_ms()
 # MED-PCからの入力を受けたら、3秒割り込み拒否
@@ -18,7 +22,6 @@ def MEDPC_callback(p):
         #print('callback function is called!')
     pre_time = cur_time
     
-
 # MED-PCのSmartCTLを
 # SG-231の「28V VDC to TTL ADAPTOR」につないだら、
 # なぜか交流電流が流れており、
@@ -54,4 +57,4 @@ async def main(pin, period_ms):
     uasyncio.create_task(check_dc_nv(dc, period_ms))
     await uasyncio.sleep_ms(period_ms)
     
-uasyncio.run(main(12, async_cycle_ms)
+uasyncio.run(main(TTL_pin, async_cycle_ms)

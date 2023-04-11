@@ -17,15 +17,26 @@ def MEDPC_callback(p):
         the_number_of_requests += 1
         #print('callback function is called!')
     pre_time = cur_time
+    
 
-
+# MED-PCのSmartCTLを
+# SG-231の「28V VDC to TTL ADAPTOR」につないだら、
+# なぜか交流電流が流れており、
+# TTLの５Vの入力を取り込んで割り込みハンドラーを
+# 呼び出すつもりだったのと、
+# この入力をタクトスイッチを共有することで、
+# 回路として、MED-PC　＝　タクトスイッチON
+# の対応を実装するつもりだったのだが、
+# 今の所、できそうにない
+# したがって、応急処置的に、
+# 非同期処理として、条件処理をする
+# 他にもっといい方法があれば、そっちを使うと思う
 async def check_dc_nv(dc, period_ms):
     global dc
     while True:
         val = dc.read_uv()
         if val < 190000:
-            global the_number_of_requests
-            the_number_of_requests += 1
+            MEDPC_callback()
         elif val > 240000:
         await uasyncio.sleep_ms(200)
             
@@ -34,3 +45,5 @@ async def main(pin, period_ms):
     dc = machine.ADC(dc_pin)
     uasyncio.create_task(check_dc_nv(dc, period_ms))
     await uasyncio.sleep_ms(100)
+    
+

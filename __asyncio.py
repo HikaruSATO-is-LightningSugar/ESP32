@@ -2,24 +2,21 @@
 
 import uasyncio
 import machine
+import utime
 
-async def blink(led, period_ms):
-    while True:
-        led.on()
-        await uasyncio.sleep_ms(5)
-        led.off()
-        await uasyncio.sleep_ms(period_ms)
-
-async def main(led1, led2):
-    uasyncio.create_task(blink(led1, 700))
-    uasyncio.create_task(blink(led2, 400))
-    await uasyncio.sleep_ms(10_000)
-
-
-# 一般的なボードでの実行
-from machine import Pin
-uasyncio.run(main(Pin(1), Pin(2)))
-
+pre_time = utime.ticks_ms()
+# MED-PCからの入力を受けたら、3秒割り込み拒否
+def MEDPC_callback(p):
+    global pre_time
+    cur_time = utime.ticks_ms()
+    if cur_time < pre_time + 3000:
+            return
+    else:
+        print("SmartCTL input")
+        global the_number_of_requests
+        the_number_of_requests += 1
+        #print('callback function is called!')
+    pre_time = cur_time
 
 
 async def check_dc_nv(dc, period_ms):

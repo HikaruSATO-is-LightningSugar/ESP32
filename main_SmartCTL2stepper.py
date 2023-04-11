@@ -1,5 +1,5 @@
 # Stepper Motor setting
-stepper_rpm = 7
+stepper_rpm = 71
 motor_pin_1 = 32
 motor_pin_2 = 33
 motor_pin_3 = 25
@@ -10,7 +10,6 @@ moter_io_led_pin = 15
 SmartCTL_pin = 18
 tactswitch_pin = 21
 STOPswitch_pin = 19
-
 
 #from stepper_arduino import Stepper
 from stepper_qiita import Stepper

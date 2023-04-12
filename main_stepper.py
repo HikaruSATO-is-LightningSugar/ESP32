@@ -1,5 +1,5 @@
 # Stepper Motor setting
-stepper_rpm = 71
+stepper_rpm = 7
 motor_pin_1 = 32
 motor_pin_2 = 33
 motor_pin_3 = 25
@@ -95,7 +95,7 @@ def STOP_motor(p):
     if cur_time < pre_time + 200:
         return
     else:
-        print('STOP is plessed')
+        #print('STOP is plessed')
         global the_number_of_requests
         the_number_of_requests = 0
     pre_time = cur_time
@@ -127,12 +127,14 @@ async_cycle_ms = 200
 async def check_dc_nv(dc, period_ms):
     while True:
         val = dc.read_uv()
-        # SmartCTLがONの時の160 ~ 190 mV:「MEDPC_callback」関数を呼び出す
+        # SmartCTLがONの時（160 ~ 190 mV）
+        #「MEDPC_callback」関数を呼び出す
         # ※「+1」の「SWITCH_callback」関数は使わない。非同期処理で3秒スリープすると、ややこしくなる
         if val > 160000 and val < 190000:
             MEDPC_callback()
-            await uasyncio.sleep_ms(3000)
-        # SmartCTLがOFFの時の250.0 ~ 280 mV:とりあえず何もしない
+            await uasyncio.sleep_ms(period_ms)
+        # SmartCTLがOFFの時（250 ~ 280 mV）
+        # とりあえず何もしない
         elif val > 240000 and val < 280000:
             await uasyncio.sleep_ms(period_ms)
         else:

@@ -128,10 +128,14 @@ async def check_dc_nv(dc, period_ms):
     global dc
     while True:
         val = dc.read_uv()
-        if val < 190000:
-            MEDPC_callback()
+        if val > 160 and val < 190000:
+            SWITCH_callback()
+            await uasyncio.sleep_ms(3000)
         elif val > 240000:
-        await uasyncio.sleep_ms(period_ms)
+            await uasyncio.sleep_ms(period_ms)
+        else:
+            await uasyncio.sleep_ms(period_ms)
+            
             
 async def main(pin, period_ms):
     dc_pin = machine.Pin(pin, machine.Pin.IN)

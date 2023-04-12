@@ -128,14 +128,13 @@ async def check_dc_nv(dc, period_ms):
     global dc
     while True:
         val = dc.read_uv()
-        if val > 160 and val < 190000:
+        if val > 160000 and val < 190000:
             SWITCH_callback()
             await uasyncio.sleep_ms(3000)
-        elif val > 240000:
+        elif val > 240000 and val < 280000:
             await uasyncio.sleep_ms(period_ms)
         else:
             await uasyncio.sleep_ms(period_ms)
-            
             
 async def main(pin, period_ms):
     dc_pin = machine.Pin(pin, machine.Pin.IN)
@@ -143,7 +142,7 @@ async def main(pin, period_ms):
     uasyncio.create_task(check_dc_nv(dc, period_ms))
     await uasyncio.sleep_ms(period_ms)
     
-uasyncio.run(main(TTL_pin, async_cycle_ms)
+uasyncio.run(main(TTL_pin, async_cycle_ms))
 
 
 #  メインループでステップモーターを回転させる

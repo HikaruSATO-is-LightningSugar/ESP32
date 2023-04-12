@@ -5,20 +5,18 @@ motor_pin_2 = 33
 motor_pin_3 = 25
 motor_pin_4 = 26
 # LED setting
-moter_io_led_pin = 15
+moter_io_led_pin = 2
 # Handling setting
-SmartCTL_pin = 18
-tactswitch_pin = 21
-STOPswitch_pin = 19
-# asyncio setting
-TTL_pin = 12
+MED_switch_pin = 17
+plus1_switch_pin = 18
+stop_switch_pin = 19
+TTL_pin = 21
+
 
 #from stepper_arduino import Stepper
 from stepper_qiita import Stepper
-import time
 import utime
 import machine
-import uasyncio
 
 
 # ステッピングモーターの初期設定
@@ -39,8 +37,8 @@ my_motor =  Stepper(number_of_steps, motor_pin_1, motor_pin_2, motor_pin_3, moto
 # setSpeed() を10→6に変更して、トルクをあげてみる
 my_motor.setSpeed(stepper_rpm)
 # 回転数の指定
-# 実験1（絹糸、6rpm）：10500μL/510s/60回転　=　80μL/4s/0.5回転
-# 実験2（テグス、7rpm）：
+# 実験（絹糸、6rpm）：10500μL/510s/60回転　=　80μL/4s/0.5回転
+# 実験（テグス、7rpm）：
 rotation = 0.5
 # 回転数×360°
 angle = rotation * number_of_steps
@@ -55,15 +53,17 @@ moter_io_led = machine.Pin(moter_io_led_pin, machine.Pin.OUT)
 # http://tech-and-investment.com/raspberrypi-pico-14-gpio-interrupt/
 # https://micropython-docs-ja.readthedocs.io/ja/latest/esp32/quickref.html
 # https://goma483549.hatenablog.com/entry/2021/09/18/104726
-SmartCTL_input = machine.Pin(SmartCTL_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
-tactswitch_input = machine.Pin(tactswitch_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
-STOPswitch_input = machine.Pin(STOPswitch_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
+MED_switch_input = machine.Pin(MED_switch_pin, machine.Pin.IN, machine.Pin.PULL_UP)
+plus1_switch_input = machine.Pin(plus1_switch_pin, machine.Pin.IN, machine.Pin.PULL_UP)
+stop_switch_input = machine.Pin(stop_switch_pin, machine.Pin.IN, machine.Pin.PULL_UP)
+TTL_signal_input = machine.Pin(TTL_pin, machine.Pin.IN, machine.Pin.PULL_UP)
+
 pre_time = utime.ticks_ms()
 the_number_of_requests = 2
 # 割り込み処理の関数定義
 
 # MED-PCからの入力を受けたら、3秒割り込み拒否
-def MEDPC_callback(p):
+def MED_callback(p):
     global pre_time
     cur_time = utime.ticks_ms()
     if cur_time < pre_time + 3000:
@@ -76,7 +76,7 @@ def MEDPC_callback(p):
     pre_time = cur_time
 
 # スイッチからの入力を受けたら、チャタリング防止のため0.２秒割り込み拒否
-def SWITCH_callback(p):
+def plus1_callback(p):
     global pre_time
     cur_time = utime.ticks_ms()
     if cur_time < pre_time + 200:
@@ -100,58 +100,14 @@ def STOP_motor(p):
         the_number_of_requests = 0
     pre_time = cur_time
     
-SmartCTL_input.irq(trigger=machine.Pin.IRQ_RISING, handler=MEDPC_callback)
-tactswitch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=SWITCH_callback)
-STOPswitch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=STOP_motor)
-
-
-# MED-PCのSmartCTLを
-# SG-231の「28V VDC to TTL ADAPTOR」につないだら、
-# なぜか交流電流が流れており、
-# TTLの５Vの入力を取り込んで割り込みハンドラーを
-# 呼び出すつもりだったのと、
-# この入力をタクトスイッチを共有することで、
-# 回路として、MED-PC　＝　タクトスイッチON
-# の対応を実装するつもりだったのだが、
-# 今の所、できそうにない
-#
-# したがって、応急処置的に、
-# 非同期処理として、条件処理をする
-# SmartCTLがOFFの時：250.0 ~ 280 mV
-# SmartCTLがONの時：160 ~ 190 mV
-# の電圧を、ESP32が検出しているので、
-# これで、条件処理をして、
-# 割り込みハンドラ呼び出しの代わりとする
-# 他にもっといい方法があれば、そっちを使うと思う
-async_cycle_ms = 200 
-async def check_dc_nv(dc, period_ms):
-    while True:
-        val = dc.read_uv()
-        # SmartCTLがONの時（160 ~ 190 mV）
-        #「MEDPC_callback」関数を呼び出す
-        # ※「+1」の「SWITCH_callback」関数は使わない。非同期処理で3秒スリープすると、ややこしくなる
-        if val > 160000 and val < 190000:
-            MEDPC_callback()
-            await uasyncio.sleep_ms(period_ms)
-        # SmartCTLがOFFの時（250 ~ 280 mV）
-        # とりあえず何もしない
-        elif val > 240000 and val < 280000:
-            await uasyncio.sleep_ms(period_ms)
-        else:
-            await uasyncio.sleep_ms(period_ms)
-            
-async def main(pin, period_ms):
-    dc_pin = machine.Pin(pin, machine.Pin.IN)
-    dc = machine.ADC(dc_pin)
-    uasyncio.create_task(check_dc_nv(dc, period_ms))
-    await uasyncio.sleep_ms(period_ms)
-    
-uasyncio.run(main(TTL_pin, async_cycle_ms))
+MED_switch_input.irq(trigger=machine.Pin.IRQ_FALLING, handler=MED_callback)
+plus1_switch_input.irq(trigger=machine.Pin.IRQ_FALLING, handler=plus1_callback)
+stop_switch_input.irq(trigger=machine.Pin.IRQ_FALLING, handler=STOP_motor)
+TTL_signal_input.irq(trigger=machine.Pin.IRQ_LOW_LEVEL, handler=MED_callback)
 
 
 #  メインループでステップモーターを回転させる
 while True:
-     #global the_number_of_requests
     if the_number_of_requests > 0:
         try:
             # モーターが回っていることを示すLED点灯
@@ -165,8 +121,13 @@ while True:
         moter_io_led.value(0)
     elif the_number_of_requests < 0:
         the_number_of_requests = 0
+        moter_io_led.value(0)
         
         
         
+
+
+
+
 
 

@@ -125,17 +125,14 @@ STOPswitch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=STOP_motor)
 # 他にもっといい方法があれば、そっちを使うと思う
 async_cycle_ms = 200 
 async def check_dc_nv(dc, period_ms):
-    global dc
     while True:
         val = dc.read_uv()
-        # SmartCTLがONの時の160 ~ 190 mV
-        #「MEDPC_callback」の関数を呼び出す
-        # 
-        # ※「+1 」の「SWITCH_callback」の関数は使わない
-        # 非同期処理で3秒スリープすると、ややこしくなる
+        # SmartCTLがONの時の160 ~ 190 mV:「MEDPC_callback」関数を呼び出す
+        # ※「+1」の「SWITCH_callback」関数は使わない。非同期処理で3秒スリープすると、ややこしくなる
         if val > 160000 and val < 190000:
             MEDPC_callback()
             await uasyncio.sleep_ms(3000)
+        # SmartCTLがOFFの時の250.0 ~ 280 mV:とりあえず何もしない
         elif val > 240000 and val < 280000:
             await uasyncio.sleep_ms(period_ms)
         else:

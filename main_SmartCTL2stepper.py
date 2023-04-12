@@ -128,8 +128,13 @@ async def check_dc_nv(dc, period_ms):
     global dc
     while True:
         val = dc.read_uv()
+        # SmartCTLがONの時の160 ~ 190 mV
+        #「MEDPC_callback」の関数を呼び出す
+        # 
+        # ※「+1 」の「SWITCH_callback」の関数は使わない
+        # 非同期処理で3秒スリープすると、ややこしくなる
         if val > 160000 and val < 190000:
-            SWITCH_callback()
+            MEDPC_callback()
             await uasyncio.sleep_ms(3000)
         elif val > 240000 and val < 280000:
             await uasyncio.sleep_ms(period_ms)

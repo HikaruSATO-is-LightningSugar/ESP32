@@ -53,10 +53,10 @@ moter_io_led = machine.Pin(moter_io_led_pin, machine.Pin.OUT)
 # http://tech-and-investment.com/raspberrypi-pico-14-gpio-interrupt/
 # https://micropython-docs-ja.readthedocs.io/ja/latest/esp32/quickref.html
 # https://goma483549.hatenablog.com/entry/2021/09/18/104726
-MED_switch_input = machine.Pin(MED_switch_pin, machine.Pin.IN, machine.Pin.PULL_UP)
-plus1_switch_input = machine.Pin(plus1_switch_pin, machine.Pin.IN, machine.Pin.PULL_UP)
-stop_switch_input = machine.Pin(stop_switch_pin, machine.Pin.IN, machine.Pin.PULL_UP)
-TTL_signal_input = machine.Pin(TTL_pin, machine.Pin.IN, machine.Pin.PULL_UP)
+MED_switch_input = machine.Pin(MED_switch_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
+plus1_switch_input = machine.Pin(plus1_switch_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
+stop_switch_input = machine.Pin(stop_switch_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
+TTL_signal_input = machine.Pin(TTL_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
 
 pre_time = utime.ticks_ms()
 the_number_of_requests = 2
@@ -69,7 +69,7 @@ def MED_callback(p):
     if cur_time < pre_time + 3000:
             return
     else:
-        print("SmartCTL input")
+        #print("SmartCTL input")
         global the_number_of_requests
         the_number_of_requests += 1
         #print('callback function is called!')
@@ -82,7 +82,7 @@ def plus1_callback(p):
     if cur_time < pre_time + 200:
             return
     else:
-        print("tactswitch input")
+         #print("tactswitch input")
         global the_number_of_requests
         the_number_of_requests += 1
         #print('callback function is called!')
@@ -100,10 +100,10 @@ def STOP_motor(p):
         the_number_of_requests = 0
     pre_time = cur_time
     
-MED_switch_input.irq(trigger=machine.Pin.IRQ_FALLING, handler=MED_callback)
-plus1_switch_input.irq(trigger=machine.Pin.IRQ_FALLING, handler=plus1_callback)
-stop_switch_input.irq(trigger=machine.Pin.IRQ_FALLING, handler=STOP_motor)
-TTL_signal_input.irq(trigger=machine.Pin.IRQ_LOW_LEVEL, handler=MED_callback)
+MED_switch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=MED_callback)
+plus1_switch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=plus1_callback)
+stop_switch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=STOP_motor)
+TTL_signal_input.irq(trigger=machine.Pin.IRQ_RISING, handler=MED_callback)
 
 
 #  メインループでステップモーターを回転させる

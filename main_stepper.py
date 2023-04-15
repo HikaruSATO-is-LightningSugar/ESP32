@@ -1,8 +1,11 @@
 # Stepper Motor setting
+# オシロスコープで確認したところ、
+# 13番のピンは、出力がない
+# 12~33番のピンは、出力がある
 stepper_rpm = 7
-motor_pin_1 = 32
-motor_pin_2 = 33
-motor_pin_3 = 25
+motor_pin_1 = 12
+motor_pin_2 = 14
+motor_pin_3 = 27
 motor_pin_4 = 26
 # LED setting
 moter_io_led_pin = 2
@@ -56,7 +59,13 @@ moter_io_led = machine.Pin(moter_io_led_pin, machine.Pin.OUT)
 MED_switch_input = machine.Pin(MED_switch_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
 plus1_switch_input = machine.Pin(plus1_switch_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
 stop_switch_input = machine.Pin(stop_switch_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
-TTL_signal_input = machine.Pin(TTL_pin, machine.Pin.IN, machine.Pin.PULL_DOWN)
+# SmartCTLのDIG-716B、Out1 4(機械には4とプリントしてある)のTTL信号を受け取る
+# オシロスコープで確認したところ、
+# TTL Outputを、プローブのグランドリードに繋いだら、ノイズがひどい
+# TTL Outputを、プローブのフックチップに繋いだら、ノイズが軽減された
+# MED-TESTでの操作にて
+# OFFで 880mV、ONで530mV
+TTL_signal_input = machine.Pin(TTL_pin, machine.Pin.IN, machine.Pin.PULL_UP)
 
 pre_time = utime.ticks_ms()
 the_number_of_requests = 2
@@ -96,6 +105,7 @@ def STOP_motor(p):
         return
     else:
         #print('STOP is plessed')
+        machine.reset()
         global the_number_of_requests
         the_number_of_requests = 0
     pre_time = cur_time
@@ -103,7 +113,7 @@ def STOP_motor(p):
 MED_switch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=MED_callback)
 plus1_switch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=plus1_callback)
 stop_switch_input.irq(trigger=machine.Pin.IRQ_RISING, handler=STOP_motor)
-TTL_signal_input.irq(trigger=machine.Pin.IRQ_RISING, handler=MED_callback)
+TTL_signal_input.irq(trigger=machine.Pin.IRQ_DOWN, handler=MED_callback)
 
 
 #  メインループでステップモーターを回転させる

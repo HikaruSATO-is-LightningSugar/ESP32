@@ -1,0 +1,378 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="ja" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ja" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>概要 &mdash; MicroPython latest ドキュメント</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="_static/_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/customstyle.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html#document-index" class="icon icon-home"> MicroPython
+          
+
+          
+          </a>
+
+          
+            
+            
+            
+              <div class="version">
+                latest
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html#document-index">MicroPython</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html#document-index">Docs</a> &raquo;</li>
+        
+      <li>概要</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/MinoruInachi/micropython/blob/doc-ja/docs/index.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+    <div class="wy-alert wy-alert-danger">
+      <p>
+        このドキュメンテーションは、MicroPython の最新開発ブランチのためのものです。
+        リリースバージョンでは利用できない機能に言及することがあります。
+      </p>
+      <p>
+        特定のリリースのドキュメントをお探しの場合は、左側のドロップダウンメニューを使って、
+        望みのバージョンを選択します。
+      </p>
+    </div>
+  
+  
+           <div itemprop="articleBody">
+            
+
+  <h1>MicroPython ドキュメンテーション</h1>
+
+  <p>
+    ようこそ！　本書は MicroPython のドキュメンテーションです。, 最終更新 2023年1月21日.
+  </p>
+
+  <p>
+    MicroPython は、さまざまなシステムやハードウェアプラットフォームで動作します。ここでは、
+    MicroPython が動作するすべてのシステムに共通するドキュメントだけでなく、
+    さまざまなプラットフォーム(
+    <a href="index.html#document-reference/glossary#term-micropython-port">ポート</a>
+    とも呼ばれます)に固有の情報も参照できます。
+  </p>
+
+  <p><strong>MicroPython の一般的なドキュメンテーション:</strong></p>
+
+  <table class="contentstable"><tr>
+    <td width="40%" style="padding-left:2em;">
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-library/index">ライブラリリファレンス</a><br/>
+        <span class="linkdescr">MicroPython のライブラリとモジュール</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-genrst/index">MicroPython の相違点</a><br/>
+        <span class="linkdescr">MicroPython と CPython とで異なっている操作</span>
+      </p>
+    </td>
+    <td width="40%" style="padding-left:2em;">
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-reference/index">言語リファレンス</a><br/>
+        <span class="linkdescr">MicroPython 固有の言語機能に関する情報</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-license">ライセンス</a><br/>
+        <span class="linkdescr">MicroPython のライセンス情報</span>
+      </p>
+    </td>
+  </tr></table>
+
+  <p><strong>プラットフォーム固有のリファレンスとチュートリアル:</strong></p>
+
+  <table class="contentstable"><tr>
+    <td width="40%" style="padding-left:2em;">
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-pyboard/quickref">pyboard 用クイック用リファレンス</a><br/>
+        <span class="linkdescr">pyboard のピン配置、サンプルコード、チュートリアル</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-esp8266/quickref">ESP8266 用クイックリファレンス</a><br/>
+        <span class="linkdescr">ESP8266 ベースのボードのピン配置、サンプルコード、チュートリアル</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-esp32/quickref">ESP32 用クイックリファレンス</a><br/>
+        <span class="linkdescr">ESP8266 ベースのボードのピン配置、サンプルコード、チュートリアル</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-rp2/quickref">Raspberry Pi RP2xxx 用クイックリファレンス</a><br/>
+        <span class="linkdescr">rp2xxx ベースのボードのピン配置、サンプルコード、チュートリアル</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-mimxrt/quickref">NXP i.MXRT 10xx 用クイックリファレンス</a><br/>
+        <span class="linkdescr">一般的な入門、サンプルコード、チュートリアル</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-wipy/quickref">WiPy/CC3200 用クイックリファレンス</a><br/>
+        <span class="linkdescr">WiPy/CC3200 のピン配置、サンプルコード、チュートリアル</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-unix/quickref">UNIX, Windows 用クイックリファレンス</a><br/>
+        <span class="linkdescr">コマンドラインのリファレンス</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-zephyr/quickref">Zephyr 用クイックリファレンス</a><br/>
+        <span class="linkdescr">サンプルコードとチュートリアル</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-renesas-ra/quickref">Renesas RA 用クイックリファレンス</a><br/>
+        <span class="linkdescr">Renesas RA ベースのボードの一般情報、サンプルコード、チュートリアル</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-samd/quickref">SAMD21/SAMD51 用クイックリファレンス</a><br/>
+        <span class="linkdescr">SAMD21/SAMD51 ベースのボードの一般情報、サンプルコード、チュートリアル</span>
+      </p>
+    </td>
+  </tr></table>
+
+  <p><strong>索引と目次:</strong></p>
+
+  <table class="contentstable"><tr>
+    <td width="40%" style="padding-left:2em;">
+      <p class="biglink">
+        <a class="biglink" href="py-modindex.html">モジュール索引</a><br/>
+        <span class="linkdescr">すべてのモジュールへのクイックアクセス</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="genindex.html">全体索引</a><br/>
+        <span class="linkdescr">すべての関数、クラス、定数</span>
+      </p>
+    </td>
+    <td width="40%" style="padding-left:2em;">
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-reference/glossary">用語集</a><br/>
+        <span class="linkdescr">MicroPython の用語の説明</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="index.html#document-index">目次</a><br/>
+        <span class="linkdescr">すべての章の一覧</span>
+      </p>
+    </td></tr>
+  </table>
+
+  <p><strong>外部リンク:</strong></p>
+
+  <table class="contentstable"><tr>
+    <td width="40%" style="padding-left:2em;">
+      <p class="biglink">
+      <a class="biglink" href="http://micropython.org">MicroPython ホームページ</a><br/>
+        <span class="linkdescr">MicroPython 公式サイト</span>
+      </p>
+      <p class="biglink">
+        <a class="biglink" href="http://forum.micropython.org">MicroPython フォーラム</a><br/>
+        <span class="linkdescr">MicroPython に関するすべてのことについて話すコミュニティの場</span>
+      </p>
+    </td>
+    <td width="40%" style="padding-left:2em;">
+      <p class="biglink">
+        <a class="biglink" href="https://github.com/micropython">MicroPython の GitHub</a><br/>
+        <span class="linkdescr">GitHub 上のソースコード</span>
+      </p>
+    </td>
+  </tr></table>
+
+
+           </div>
+           
+          </div>
+
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright - The MicroPython Documentation is Copyright © 2014-2022, Damien P. George, Paul Sokolovsky, and contributors
+      
+        <span class="commit">
+          Revision <code>587a1f67</code>.
+        </span>
+      
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Versions and Downloads</span>
+    latest
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Versions</dt>
+      
+        <dd><a href="//en/latest">latest</a></dd>
+      
+    </dl>
+    <dl>
+      <dt>Downloads</dt>
+      
+        <dd><a href="//micropython-docs-ja.readthedocs.io/_/downloads/ja/latest/htmlzip/">html</a></dd>
+      
+        <dd><a href="//micropython-docs-ja.readthedocs.io/_/downloads/ja/latest/epub/">epub</a></dd>
+      
+    </dl>
+    <hr/>
+    <dl>
+      <dt>External links</dt>
+        <dd>
+          <a href="https://www.micropython.org">micropython.org</a>
+        </dd>
+        <dd>
+          <a href="https://github.com/micropython/micropython">GitHub</a>
+        </dd>
+    </dl>
+  </div>
+</div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+   
+
+</body>
+</html>
